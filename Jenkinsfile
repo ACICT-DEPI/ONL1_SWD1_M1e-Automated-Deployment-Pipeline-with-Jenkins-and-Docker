@@ -3,17 +3,6 @@ pipeline {
 
     stages {
 
-
-        stage('Install Docker Compose') {
-            steps {
-                sh '''
-                if ! [ -x "$(command -v docker-compose)" ]; then
-                  sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                  sudo chmod +x /usr/local/bin/docker-compose
-                fi
-                '''
-            }
-        }
         
         stage('Build') {
             steps {
@@ -27,7 +16,7 @@ pipeline {
                 // Run Maven on a Unix agent.
                // sh "cd ServerSide/Api.Tests"
                // sh "dotnet test"
-                echo ' testing.. the application'
+                echo ' testing..... the application'
 
             }
 
