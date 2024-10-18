@@ -3,21 +3,11 @@ pipeline {
 
     stages {
         
-        //  stage('Checkout') {
-        //     steps {
-        //     // Get some code from a GitHub repository
-        //         git 'https://github.com/AlaaMohamed09/DEPI-Graduationproject.git'
-        //         sh "ls"
-        // }
-
-        // }
-        
-        
         stage('Build') {
             steps {
                
-                echo ' building the application'
-            
+             //   echo ' building the application'
+                    sh 'docker compuse up'
             }
 
         }
@@ -25,8 +15,8 @@ pipeline {
         stage('Test') {
             steps {
                 // Run Maven on a Unix agent.
-                // sh "cd ServerSide/Api.Tests"
-                // sh "dotnet test"
+               // sh "cd ServerSide/Api.Tests"
+               // sh "dotnet test"
                 echo ' testing the application'
 
             }
