@@ -14,8 +14,10 @@ pipeline {
         stage('Test') {
             steps {
                 // Run Maven on a Unix agent.
-                sh "cd ServerSide/"
+             //   sh "cd ServerSide/"
+                dir('ServerSide'){
                 sh "dotnet test"
+                }
               //  echo ' testing... the application'
 
             }
