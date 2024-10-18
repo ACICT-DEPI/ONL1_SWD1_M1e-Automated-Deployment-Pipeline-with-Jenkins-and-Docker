@@ -7,7 +7,7 @@ pipeline {
         stage('Build serverside docker') {
             steps {
               dir('ServerSide'){
-                sh "docker build -t serverside'"
+                sh 'docker build -t serverside .'
               }
             }
 
@@ -16,7 +16,7 @@ pipeline {
         stage('Build clientside docker') {
             steps {
               dir('ClientSide'){
-                sh "docker build -t clientside'"
+                sh 'docker build -t clientside .'
               }
             }
 
