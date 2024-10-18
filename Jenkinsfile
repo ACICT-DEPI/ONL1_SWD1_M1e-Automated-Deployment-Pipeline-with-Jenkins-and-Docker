@@ -15,7 +15,7 @@ pipeline {
                 // Run Maven on a Unix agent.
                // sh "cd ServerSide/Api.Tests"
                // sh "dotnet test"
-                echo ' testing... the application'
+                echo ' testing.... the application'
 
             }
 
