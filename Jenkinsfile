@@ -6,7 +6,7 @@ pipeline {
         
         stage('Build') {
             steps {
-                sh 'docker-compose up'
+              //  sh 'docker-compose up'
             }
 
         }
@@ -14,9 +14,9 @@ pipeline {
         stage('Test') {
             steps {
                 // Run Maven on a Unix agent.
-               // sh "cd ServerSide/Api.Tests"
-               // sh "dotnet test"
-                echo ' testing... the application'
+                sh "cd ServerSide/"
+                sh "dotnet test"
+              //  echo ' testing... the application'
 
             }
 
