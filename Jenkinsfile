@@ -26,21 +26,27 @@ pipeline {
         stage('Push Client Image to Docker Hub') {
             steps {
                 script {
-                    // Log in to Docker Hub and push client image
-                     sh "echo ${myrepo-criedentials} | docker login -u ${myrepo-criedentials} --password-stdin"
-                     sh 'docker tag serverside alaamohamed09/depi-project:latest'
-                     sh 'docker push alaamohamed09/depi-project:latest'
+                    // Use Jenkins credentials to log in to Docker Hub
+                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u alaamohamed09 --password-stdin'
+                        // Tag and push the clientside image
+                        sh 'docker tag clientside alaamohamed09/depi-project:client-latest'
+                        sh 'docker push alaamohamed09/depi-project:client-latest'
+                    }
                 }
             }
         }
 
-         stage('Push serverside Image to Docker Hub') {
+          stage('Push serverside Image to Docker Hub') {
             steps {
                 script {
-                    // Log in to Docker Hub and push client image
-                        sh "echo ${myrepo-criedentials} | docker login -u ${myrepo-criedentials} --password-stdin"
-                        sh 'docker tag clientside alaamohamed09/depi-project:latest'
-                        sh 'docker push alaamohamed09/depi-project:latest'
+                    // Use Jenkins credentials to log in to Docker Hub
+                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u alaamohamed09 --password-stdin'
+                        // Tag and push the serverside image
+                        sh 'docker tag serverside alaamohamed09/depi-project:server-latest'
+                        sh 'docker push alaamohamed09/depi-project:server-latest'
+                    }
                 }
             }
         }
