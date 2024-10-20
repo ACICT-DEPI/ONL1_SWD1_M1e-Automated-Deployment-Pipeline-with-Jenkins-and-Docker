@@ -23,29 +23,29 @@ pipeline {
         }
 
 
-        stage('Push Client Image to Docker Hub') {
+         stage('Push Client Image to Docker Hub') {
             steps {
                 script {
-                    // Use Jenkins credentials to log in to Docker Hub
-                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
-                        sh 'echo $DOCKERHUB_PASS | docker login -u alaamohamed09 --password-stdin'
+                    // Use Docker Hub credentials (Username with Password)
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
                         // Tag and push the clientside image
-                        sh 'docker tag clientside alaamohamed09/depi-project:client-latest'
-                        sh 'docker push alaamohamed09/depi-project:client-latest'
+                        sh 'docker tag clientside $DOCKERHUB_USER/depi-project:client-latest'
+                        sh 'docker push $DOCKERHUB_USER/depi-project:client-latest'
                     }
                 }
             }
         }
 
-          stage('Push serverside Image to Docker Hub') {
+        stage('Push serverside Image to Docker Hub') {
             steps {
                 script {
-                    // Use Jenkins credentials to log in to Docker Hub
-                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
-                        sh 'echo $DOCKERHUB_PASS | docker login -u alaamohamed09 --password-stdin'
+                    // Use Docker Hub credentials (Username with Password)
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
                         // Tag and push the serverside image
-                        sh 'docker tag serverside alaamohamed09/depi-project:server-latest'
-                        sh 'docker push alaamohamed09/depi-project:server-latest'
+                        sh 'docker tag serverside $DOCKERHUB_USER/depi-project:server-latest'
+                        sh 'docker push $DOCKERHUB_USER/depi-project:server-latest'
                     }
                 }
             }
