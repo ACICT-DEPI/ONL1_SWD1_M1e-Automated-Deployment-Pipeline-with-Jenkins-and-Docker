@@ -27,9 +27,9 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker Hub and push client image
-                  //  sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
+                     sh "echo ${myrepo-criedentials} | docker login -u ${myrepo-criedentials} --password-stdin"
                      sh 'docker tag serverside alaamohamed09/depi-project:latest'
-                    sh 'docker push alaamohamed09/depi-project:latest'
+                     sh 'docker push alaamohamed09/depi-project:latest'
                 }
             }
         }
@@ -38,9 +38,9 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker Hub and push client image
-                  //  sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
-                     sh 'docker tag clientside alaamohamed09/depi-project:latest'
-                    sh 'docker push alaamohamed09/depi-project:latest'
+                        sh "echo ${myrepo-criedentials} | docker login -u ${myrepo-criedentials} --password-stdin"
+                        sh 'docker tag clientside alaamohamed09/depi-project:latest'
+                        sh 'docker push alaamohamed09/depi-project:latest'
                 }
             }
         }
