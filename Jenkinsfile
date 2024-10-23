@@ -2,28 +2,23 @@ pipeline {
     agent any
 
     stages {
-
-        
         stage('Build serverside docker') {
             steps {
-              dir('ServerSide'){
-                sh 'docker build -t serverside .'
-              }
+                dir('ServerSide') {
+                    sh 'docker build -t serverside .'
+                }
             }
-
         }
 
         stage('Build clientside docker') {
             steps {
-              dir('ClientSide'){
-                sh 'docker build -t clientside .'
-              }
+                dir('ClientSide') {
+                    sh 'docker build -t clientside .'
+                }
             }
-
         }
 
-
-         stage('Push Client Image to Docker Hub') {
+        stage('Push Client Image to Docker Hub') {
             steps {
                 script {
                     // Use Docker Hub credentials (Username with Password)
@@ -50,39 +45,31 @@ pipeline {
                 }
             }
         }
-        
-       stage('Test') {
-           steps {
-               // Run Maven on a Unix agent.
-             
-               dir('ServerSide'){
-               sh "dotnet test"
-               }
-              
 
-           }
+        stage('Test') {
+            steps {
+                dir('ServerSide') {
+                    // Run tests
+                    sh "dotnet test"
+                }
+            }
+        }
 
-       }
-        
-        //  stage('Deploy') {
-        //     steps {
-            
-        //         echo ' deplying.. the application'
-
-        //     }
-
-        // }
-
-
-         stage('Deploy to EC2') {
+        stage('Deploy to EC2') {
             steps {
                 script {
                     // Use SSH credentials stored in Jenkins to SSH into EC2 and deploy the app
                     sshagent(['ec2-ssh-credentials']) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no root@ec2-3-250-77-248.eu-west-1.compute.amazonaws.com << EOF
+                                # Navigate to the directory containing docker-compose.yml
+                                cd /home  # Change this if your path is different
+
+                                # Pull the latest images
                                 docker pull $DOCKERHUB_USER/depi-project:server-latest
                                 docker pull $DOCKERHUB_USER/depi-project:client-latest
+
+                                # Start the services defined in docker-compose.yml
                                 docker-compose up -d
                             EOF
                         '''
@@ -92,7 +79,7 @@ pipeline {
         }
     }
 
-      post {
+    post {
         success {
             emailext(
                 to: 'ialaamohamed123@gmail.com',
@@ -108,9 +95,4 @@ pipeline {
             )
         }
     }
-
-    
-    
 }
-
-
