@@ -53,7 +53,7 @@ pipeline {
         
        stage('Test') {
            steps {
-                Run Maven on a Unix agent.
+               // Run Maven on a Unix agent.
              
                dir('ServerSide'){
                sh "dotnet test"
@@ -64,14 +64,14 @@ pipeline {
 
        }
         
-         stage('Deploy') {
-            steps {
+        //  stage('Deploy') {
+        //     steps {
             
-                echo ' deplying.. the application'
+        //         echo ' deplying.. the application'
 
-            }
+        //     }
 
-        }
+        // }
 
 
          stage('Deploy to EC2') {
