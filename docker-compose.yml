@@ -1,3 +1,5 @@
+version: '3.8'  # Specify the version of Docker Compose
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -13,10 +15,8 @@ services:
       - sqlserver_data:/var/opt/mssql 
 
   api:
-    image: serverside
+    image: alaamohamed09/depi-project:server-latest  # Pulling image from Docker Hub
     container_name: serverside
-    build:
-      context: ./ServerSide
     depends_on:
       - sqlserver
     environment:
@@ -28,10 +28,8 @@ services:
       - app-network
     
   client:
-    image: clientside
+    image: alaamohamed09/depi-project:client-latest  # Pulling image from Docker Hub
     container_name: clientside
-    build:
-      context: ./ClientSide
     ports:
       - "80:80"
     environment:
@@ -39,7 +37,7 @@ services:
     depends_on:
       - api
     networks:
-    - app-network
+      - app-network
 
 networks:
   app-network:
@@ -47,3 +45,4 @@ networks:
 
 volumes:
   sqlserver_data:   
+
