@@ -67,7 +67,7 @@ pipeline {
          stage('Deploy') {
             steps {
             
-                echo ' deplying.. the application'
+                echo ' deplying.... the application'
 
             }
 
