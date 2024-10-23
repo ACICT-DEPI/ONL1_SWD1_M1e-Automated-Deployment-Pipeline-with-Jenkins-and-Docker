@@ -4,65 +4,65 @@ pipeline {
     stages {
 
         
-    //     stage('Build serverside docker') {
-    //         steps {
-    //           dir('ServerSide'){
-    //             sh 'docker build -t serverside .'
-    //           }
-    //         }
+        stage('Build serverside docker') {
+            steps {
+              dir('ServerSide'){
+                sh 'docker build -t serverside .'
+              }
+            }
 
-    //     }
+        }
 
-    //     stage('Build clientside docker') {
-    //         steps {
-    //           dir('ClientSide'){
-    //             sh 'docker build -t clientside .'
-    //           }
-    //         }
+        stage('Build clientside docker') {
+            steps {
+              dir('ClientSide'){
+                sh 'docker build -t clientside .'
+              }
+            }
 
-    //     }
+        }
 
 
-    //      stage('Push Client Image to Docker Hub') {
-    //         steps {
-    //             script {
-    //                 // Use Docker Hub credentials (Username with Password)
-    //                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-    //                     sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
-    //                     // Tag and push the clientside image
-    //                     sh 'docker tag clientside $DOCKERHUB_USER/depi-project:client-latest'
-    //                     sh 'docker push $DOCKERHUB_USER/depi-project:client-latest'
-    //                 }
-    //             }
-    //         }
-    //     }
+         stage('Push Client Image to Docker Hub') {
+            steps {
+                script {
+                    // Use Docker Hub credentials (Username with Password)
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                        // Tag and push the clientside image
+                        sh 'docker tag clientside $DOCKERHUB_USER/depi-project:client-latest'
+                        sh 'docker push $DOCKERHUB_USER/depi-project:client-latest'
+                    }
+                }
+            }
+        }
 
-    //     stage('Push serverside Image to Docker Hub') {
-    //         steps {
-    //             script {
-    //                 // Use Docker Hub credentials (Username with Password)
-    //                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-    //                     sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
-    //                     // Tag and push the serverside image
-    //                     sh 'docker tag serverside $DOCKERHUB_USER/depi-project:server-latest'
-    //                     sh 'docker push $DOCKERHUB_USER/depi-project:server-latest'
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Push serverside Image to Docker Hub') {
+            steps {
+                script {
+                    // Use Docker Hub credentials (Username with Password)
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                        // Tag and push the serverside image
+                        sh 'docker tag serverside $DOCKERHUB_USER/depi-project:server-latest'
+                        sh 'docker push $DOCKERHUB_USER/depi-project:server-latest'
+                    }
+                }
+            }
+        }
         
-    //    stage('Test') {
-    //        steps {
-    //             Run Maven on a Unix agent.
+       stage('Test') {
+           steps {
+                Run Maven on a Unix agent.
              
-    //            dir('ServerSide'){
-    //            sh "dotnet test"
-    //            }
+               dir('ServerSide'){
+               sh "dotnet test"
+               }
               
 
-    //        }
+           }
 
-    //    }
+       }
         
          stage('Deploy') {
             steps {
@@ -71,6 +71,24 @@ pipeline {
 
             }
 
+        }
+
+
+         stage('Deploy to EC2') {
+            steps {
+                script {
+                    // Use SSH credentials stored in Jenkins to SSH into EC2 and deploy the app
+                    sshagent(['ec2-ssh-credentials']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no root@ec2-3-250-77-248.eu-west-1.compute.amazonaws.com << EOF
+                                docker pull $DOCKERHUB_USER/depi-project:server-latest
+                                docker pull $DOCKERHUB_USER/depi-project:client-latest
+                                docker-compose up -d
+                            EOF
+                        '''
+                    }
+                }
+            }
         }
     }
 
