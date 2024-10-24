@@ -61,7 +61,7 @@ pipeline {
                     // Use SSH credentials stored in Jenkins to SSH into EC2 and deploy the app
                     sshagent(['ec2-ssh-credentials']) {
                         sh '''
-                            ssh -o StrictHostKeyChecking=no root@ec2-34-249-200-147.eu-west-1.compute.amazonaws.com << 'EOF'
+                            ssh -o StrictHostKeyChecking=no root@ec2-34-249-200-147.eu-west-1.compute.amazonaws.com << EOF
                                 # Navigate to the home directory
                                 cd /home
 
