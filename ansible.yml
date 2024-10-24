@@ -1,0 +1,64 @@
+---
+- name: Setup web and database services on EC2
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt packages (Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install .NET Core 8.0 SDK
+      apt:
+        name: dotnet-sdk-8.0
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Node.js for Angular
+      apt:
+        name: nodejs
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install npm for Angular
+      apt:
+        name: npm
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install SQL Server 2022
+      shell: |
+        wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2022.list)"
+        apt-get update
+        apt-get install -y mssql-server
+        /opt/mssql/bin/mssql-conf setup
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Enable and start Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Pull Docker images for web, API, and DB services
+      shell: |
+        docker pull mcr.microsoft.com/dotnet/aspnet:8.0
+        docker pull mcr.microsoft.com/mssql/server:2022-latest
+
+    - name: Clone Angular app repository
+      git:
+        repo: https://github.com/your-angular-repo.git
+        dest: /var/www/angular-app
