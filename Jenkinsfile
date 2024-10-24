@@ -66,8 +66,8 @@ pipeline {
                                 cd /home
 
                                 # Pull the latest images
-                                docker pull $DOCKERHUB_USER/depi-project:server-latest
-                                docker pull $DOCKERHUB_USER/depi-project:client-latest
+                                #docker pull $DOCKERHUB_USER/depi-project:server-latest
+                                #docker pull $DOCKERHUB_USER/depi-project:client-latest
 
                                 # Start the services defined in docker-compose.yml
                                 docker-compose up -d
