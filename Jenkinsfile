@@ -62,18 +62,14 @@ pipeline {
                     sshagent(['ec2-ssh-credentials']) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no root@ec2-34-249-200-147.eu-west-1.compute.amazonaws.com << 'EOF'
-                            # Navigate to the home directory
-                            cd /home
+                                # Navigate to the home directory
+                                cd /home
 
-                            # Pull the latest Docker images (if needed)
-                            docker pull $DOCKERHUB_USER/depi-project:server-latest
-                            docker pull $DOCKERHUB_USER/depi-project:client-latest
+                                # Start services defined in docker-compose.yml
+                                docker-compose up -d || { echo "Docker-compose failed"; exit 1; }
 
-                            # Start services defined in docker-compose.yml
-                            docker-compose up -d || { echo "Docker-compose failed"; exit 1; }
-
-                            echo "Deployment complete"
-                        EOF
+                                echo "Deployment complete"
+                            EOF
                         '''
                     }
                 }
